@@ -1,50 +1,73 @@
 'use client'
 
 import React from 'react';
+
 import styles from './styles.module.css'
-import CatExpenseContextProvider from './context';
+import CatExpenseContextProvider, { useCatExpenseContext } from './context';
+import Table from './components/Table';
+import { CatExpenseCreateParameters } from '@/app/types/CatExpense';
+import AddCatExpenseForm from './components/AddCatExpenseForm';
+
+type Resolver = CatExpenseCreateParameters | null;
+type ResolverFunc = (value: Resolver | PromiseLike<Resolver>) => Promise<void>;
 
 export default function CatExpenseWidget(): JSX.Element {
-  function toggleCheckbox(e: React.ChangeEvent<HTMLInputElement>) {
-    e.preventDefault();
-    // implement me
+  const { addCatExpense, deleteMarkedCatExpenses } = useCatExpenseContext();
+  const addCatExpenseDialog = React.useRef<HTMLDialogElement | null>(null);
+  const [showAddCatExpenseForm, setShowAddCatExpenseForm] = React.useState(false);
+  const addCatExpenseResolver = React.useRef<ResolverFunc | null>(null);
+
+  React.useEffect(() => {
+    if (showAddCatExpenseForm) {
+      addCatExpenseDialog.current?.showModal();
+    } else {
+      addCatExpenseDialog.current?.close();
+    }
+  }, [showAddCatExpenseForm]);
+
+  async function submitCatExpenseForm(params: CatExpenseCreateParameters) {
+    if (addCatExpenseResolver.current !== null) {
+      await addCatExpenseResolver.current(params)
+      addCatExpenseResolver.current = null;
+    }
+    setShowAddCatExpenseForm(false);
   }
 
-  function onAddExpenseClicked(e: React.MouseEvent) {
+  function forceExitDialog() {
+    addCatExpenseResolver.current = null;
+  }
+
+  function promptUserWithCatExpenseForm(): Promise<Resolver> {
+    setShowAddCatExpenseForm(true);
+    return new Promise<CatExpenseCreateParameters | null>(r => {
+      addCatExpenseResolver.current = r;
+    })
+  }
+
+  async function onAddExpenseClicked(e: React.MouseEvent) {
     e.preventDefault();
-    // implement me
+    const proposedCatExpense = await promptUserWithCatExpenseForm();
+    if (proposedCatExpense !== null) {
+      addCatExpense(proposedCatExpense);
+    }
   }
 
   function onDeleteExpenseClicked(e: React.MouseEvent) {
     e.preventDefault();
-    // implement me
+    deleteMarkedCatExpenses();
   }
 
   return (
     <CatExpenseContextProvider>
+      <dialog ref={addCatExpenseDialog} onCancel={forceExitDialog}>
+        {showAddCatExpenseForm && <AddCatExpenseForm submitCatExpenseForm={submitCatExpenseForm} />}
+      </dialog>
       <div className={styles.wrapper}>
         <div className={styles.controlPanel}>
           <button onClick={onAddExpenseClicked}>Add Expense</button>
           <button onClick={onDeleteExpenseClicked}>Delete Expense</button>
         </div>
-        <table className={styles.table}>
-          <thead className={styles.tableHead}>
-            <tr>
-              <th />
-              <th>Item</th>
-              <th>Category</th>
-              <th>Amount</th>
-            </tr>
-          </thead>
-          <tbody className={styles.tableBody}>
-            <tr>
-              <td><input type="checkbox" onChange={toggleCheckbox} /></td>
-              <td>Cat food</td>
-              <td>Food</td>
-              <td>Amount</td>
-            </tr>
-          </tbody>
-        </table>
+        <Table />
       </div>
     </CatExpenseContextProvider>
   )

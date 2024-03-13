@@ -8,7 +8,7 @@ export type CatExpenseStoreType = {
   addExpenseStatus: OperationStatus;
   addExpenseErrorMessage: string | null;
   deleteExpenseStatus: OperationStatus;
-  expenseBeingDeleted: CatExpense | null;
+  expensesMarkedForDeletion: Set<string>;
   deleteExpenseErrorMessage: string | null;
   fetchExpenseStatus: OperationStatus;
   fetchExpenseErrorMessage: string | null;
@@ -21,7 +21,9 @@ export type CatExpenseActionCreatorType =
   | { type: "addRequested" }
   | { type: "addSuccess"; payload: { expense: CatExpense } }
   | { type: "addError"; payload: { errorMessage: string } }
-  | { type: "deleteRequested"; payload: { expense: CatExpense } }
+  | { type: "markForDeletion"; payload: { id: string } }
+  | { type: "unmarkForDeletion"; payload: { id: string } }
+  | { type: "deleteRequested" }
   | { type: "deleteSuccess" }
   | { type: "deleteError"; payload: { errorMessage: string } };
 
@@ -31,7 +33,7 @@ export function initialState(): CatExpenseStoreType {
     addExpenseStatus: "success",
     addExpenseErrorMessage: null,
     deleteExpenseStatus: "success",
-    expenseBeingDeleted: null,
+    expensesMarkedForDeletion: new Set(),
     deleteExpenseErrorMessage: null,
     fetchExpenseStatus: "success",
     fetchExpenseErrorMessage: null,
@@ -82,31 +84,55 @@ const catExpenseReducer: React.Reducer<
         addExpenseStatus: "error",
         addExpenseErrorMessage: action.payload.errorMessage,
       };
+    case "markForDeletion": {
+      const id = action.payload.id;
+      if (
+        state.deleteExpenseStatus === "loading" ||
+        state.expenses.find((e) => e.id === id) === undefined
+      ) {
+        return state;
+      }
+      const s = new Set(Array.from(state.expensesMarkedForDeletion));
+      s.add(id);
+      return {
+        ...state,
+        expensesMarkedForDeletion: s,
+      };
+    }
+    case "unmarkForDeletion": {
+      const id = action.payload.id;
+      if (
+        state.deleteExpenseStatus === "loading" ||
+        state.expenses.find((e) => e.id === action.payload.id) === undefined ||
+        !state.expensesMarkedForDeletion.has(id)
+      ) {
+        return state;
+      }
+      const s = new Set(Array.from(state.expensesMarkedForDeletion));
+      return {
+        ...state,
+        expensesMarkedForDeletion: s,
+      };
+    }
     case "deleteRequested":
       return {
         ...state,
         deleteExpenseStatus: "loading",
-        expenseBeingDeleted: action.payload.expense,
         deleteExpenseErrorMessage: null,
       };
     case "deleteSuccess":
-      const newExpenses = [...state.expenses];
-      const ebd = state.expenseBeingDeleted!;
-      const indexOfExpenseBeingDeleted = newExpenses.findIndex(
-        (e: CatExpense): boolean =>
-          e.amount === ebd.amount &&
-          e.category === ebd.category &&
-          e.itemName === ebd.itemName,
-      );
-      if (indexOfExpenseBeingDeleted === -1) return state;
+      const newExpenses = [];
+      for (const expense of state.expenses) {
+        if (state.expensesMarkedForDeletion.has(expense.id)) {
+          continue;
+        }
+        newExpenses.push(expense);
+      }
       return {
         ...state,
         deleteExpenseStatus: "success",
-        expenseBeingDeleted: null,
-        expenses: [
-          ...newExpenses.slice(0, indexOfExpenseBeingDeleted),
-          ...newExpenses.slice(indexOfExpenseBeingDeleted + 1),
-        ],
+        expensesMarkedForDeletion: new Set(),
+        expenses: newExpenses,
       };
     case "deleteError":
       return {

@@ -1,7 +1,11 @@
-type CatExpense = {
+type Category = "Food" | "Furniture" | "Accessory";
+
+export type CatExpenseCreateParameters = {
   itemName: string;
-  category: string;
+  category: Category;
   amount: number;
 };
 
-export default CatExpense;
+export type CatExpense = CatExpenseCreateParameters & {
+  id: string;
+};

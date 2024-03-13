@@ -12,6 +12,7 @@
 	margin: 1rem 0;
 }
 
+.addCatExpenseForm button,
 .controlPanel button {
 	border-radius: 4px;
 	background-color: rgb(88, 78, 233);
@@ -51,4 +52,53 @@
 
 .tableBody tr:hover td {
 	background-color: transparent;
+}
+
+.addCatExpenseFormWrapper {
+	display: grid;
+	gap: 1rem;
+	grid-template-columns: 50% 50%;
+	margin: 2rem;
+}
+
+.addCatExpenseForm {
+	display: grid;
+	grid-template-columns: [labels] 2fr [inputs] 1fr;
+	grid-auto-flow: row;
+	gap: 1rem 0.5rem;
+}
+
+.addCatExpenseForm input,
+.addCatExpenseForm select {
+	padding: 8px;
+	border-radius: 4px;
+}
+
+.randomFactWrapper {
+	margin-left: 1rem;
+	color: rgb(88, 78, 233);
+	font-style: italic;
+}
+
+.randomFactWrapper span {
+	display: block;
+}
+
+.randomFactTitle {
+	font-size: 1.2rem;
+	font-weight: bold;
+}
+
+.addCatExpenseForm label {
+	grid-column: labels;
+}
+
+.addCatExpenseForm input,
+.addCatExpenseForm select,
+.addCatExpenseForm button {
+	grid-column: controls;
+}
+
+.formValidationError {
+	color: red;
 }
