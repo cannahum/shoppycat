@@ -1,0 +1,54 @@
+.wrapper {
+	background-color: white;
+	border: 1px solid red;
+	height: 50%;
+	padding: 2rem;
+	text-align: flex-start;
+}
+
+.controlPanel {
+	display: flex;
+	justify-content: flex-start;
+	margin: 1rem 0;
+}
+
+.controlPanel button {
+	border-radius: 4px;
+	background-color: rgb(88, 78, 233);
+	color: white;
+	padding: 8px;
+	border: none;
+	cursor: pointer;
+}
+
+.controlPanel button:not(:first-of-type) {
+	margin-left: 1rem;
+}
+
+.table,
+.table th,
+.table td {
+	border: 2px solid rgb(149, 160, 174);
+	padding: 8px;
+	text-align: flex-start;
+}
+
+.table th {
+	font-weight: bold;
+}
+
+.table {
+	border-collapse: collapse;
+}
+
+.tableBody td {
+	background-color: white;
+}
+
+.tableBody tr:hover {
+	background-color: rgb(209, 235, 233);
+}
+
+.tableBody tr:hover td {
+	background-color: transparent;
+}
