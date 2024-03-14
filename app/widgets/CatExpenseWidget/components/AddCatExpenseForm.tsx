@@ -23,7 +23,7 @@ function AddCatExpenseForm(props: AddCatExpenseFormProps): JSX.Element {
           if (!values.itemName) {
             errors.itemName = 'Required';
           }
-          if (values.amount === 0) {
+          if (values.amount <= 0) {
             errors.amount = 'Amount should be > 0'
           }
           return errors;
@@ -37,7 +37,7 @@ function AddCatExpenseForm(props: AddCatExpenseFormProps): JSX.Element {
           setSubmitting(false);
         }}
       >
-        {({ errors, touched }) => (
+        {({ errors, touched, isValid }) => (
           <Form className={styles.addCatExpenseForm}>
             <label htmlFor="itemName">Item:</label>
             <div className={styles.inputWrapper}>
@@ -68,7 +68,7 @@ function AddCatExpenseForm(props: AddCatExpenseFormProps): JSX.Element {
               ) : null}
             </div>
             <div className={styles.buttonWrapper}>
-              <button type="submit">Submit</button>
+              <button type="submit" disabled={!isValid}>Submit</button>
             </div>
           </Form>
 

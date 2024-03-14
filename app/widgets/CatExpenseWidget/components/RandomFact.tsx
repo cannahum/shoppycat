@@ -2,8 +2,10 @@ import React from 'react';
 
 import styles from '../styles.module.css';
 import { Configuration, FactsApi } from '@/app/lib';
+import Loader from '@/app/components/Loader';
 
 function RandomFact() {
+  const [loading, setLoading] = React.useState(false);
   const [f, sf] = React.useState<string>('');
 
   React.useEffect(() => {
@@ -11,6 +13,7 @@ function RandomFact() {
     const signal = abort.signal;
 
     const fetchFact = async () => {
+      setLoading(true);
       const randomClient = new FactsApi(
         new Configuration({ basePath: 'https://catfact.ninja' })
       );
@@ -19,6 +22,8 @@ function RandomFact() {
         sf(fact.fact || '');
       } catch (e) {
         console.warn('error fetching random fact', e)
+      } finally {
+        setLoading(false);
       }
     };
     fetchFact();
@@ -27,7 +32,10 @@ function RandomFact() {
   return (
     <div className={styles.randomFactWrapper}>
       <span className={styles.randomFactTitle}>Random cat fact:</span>
-      <span className={styles.randomFact}>{f}</span>
+      {loading ? (<Loader />) : (
+        <span className={styles.randomFact}>{f}</span>
+
+      )}
     </div>
 
   )

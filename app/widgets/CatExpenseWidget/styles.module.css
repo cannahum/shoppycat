@@ -74,6 +74,7 @@
 	margin-left: 1rem;
 	color: rgb(88, 78, 233);
 	font-style: italic;
+	max-width: 200px;
 }
 
 .randomFactWrapper span {
@@ -97,4 +98,8 @@
 
 .formValidationError {
 	color: red;
+}
+
+.addCatExpenseForm button:disabled {
+	opacity: 0.3;
 }
