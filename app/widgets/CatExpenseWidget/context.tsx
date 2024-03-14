@@ -3,6 +3,7 @@ import React from 'react';
 import { CatExpenseCreateParameters } from '@/app/types/CatExpense';
 import reducer, { CatExpenseActionCreatorType, CatExpenseStoreType, initialState } from './store';
 
+const API_DURATION = 1000;
 type CatExpenseContextType = {
   catExpenseStore: CatExpenseStoreType,
   fetchCatExpenses: () => void;
@@ -40,6 +41,35 @@ const CatExpenseContextProvider: React.FunctionComponent<CatExpenseContextProvid
     dispatch({
       type: 'fetchRequested'
     });
+    return new Promise((r) => {
+      setTimeout(() => {
+        dispatch({
+          type: 'fetchSuccess',
+          payload: {
+            expenses: [
+              {
+                id: crypto.randomUUID(),
+                amount: 10,
+                category: 'Food',
+                itemName: 'Whiskers Cat food'
+              },
+              {
+                id: crypto.randomUUID(),
+                amount: 500,
+                category: 'Furniture',
+                itemName: 'Self cleaning cat Litter box',
+              },
+              {
+                id: crypto.randomUUID(),
+                amount: 1000,
+                category: 'Accessory',
+                itemName: 'Diamond Cat collar'
+              },
+            ]
+          }
+        });
+      }, API_DURATION)
+    })
   }
 
   async function addCatExpense(exp: CatExpenseCreateParameters): Promise<void> {
@@ -59,7 +89,7 @@ const CatExpenseContextProvider: React.FunctionComponent<CatExpenseContextProvid
           }
         });
         r();
-      }, 1000);
+      }, API_DURATION);
     })
   }
 
@@ -92,7 +122,7 @@ const CatExpenseContextProvider: React.FunctionComponent<CatExpenseContextProvid
           type: 'deleteSuccess',
         });
         r();
-      }, 1000);
+      }, API_DURATION);
     });
   }
 
