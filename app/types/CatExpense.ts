@@ -1,4 +1,4 @@
-type Category = "Food" | "Furniture" | "Accessory";
+export type Category = "Food" | "Furniture" | "Accessory";
 
 export type CatExpenseCreateParameters = {
   itemName: string;

@@ -43,15 +43,11 @@
 }
 
 .tableBody td {
-	background-color: white;
-}
-
-.tableBody tr:hover {
-	background-color: rgb(209, 235, 233);
-}
-
-.tableBody tr:hover td {
 	background-color: transparent;
+}
+
+.categoryWinner {
+	background-color: rgb(209, 235, 233);
 }
 
 .addCatExpenseFormWrapper {

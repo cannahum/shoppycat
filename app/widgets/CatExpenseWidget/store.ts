@@ -1,10 +1,11 @@
 import React from "react";
 
-import { CatExpense } from "@/app/types/CatExpense";
+import { CatExpense, Category } from "@/app/types/CatExpense";
 import OperationStatus from "@/app/types/operationStatus";
 
 export type CatExpenseStoreType = {
   expenses: CatExpense[];
+  winningCategories: Category[];
   addExpenseStatus: OperationStatus;
   addExpenseErrorMessage: string | null;
   deleteExpenseStatus: OperationStatus;
@@ -30,6 +31,7 @@ export type CatExpenseActionCreatorType =
 export function initialState(): CatExpenseStoreType {
   return {
     expenses: [],
+    winningCategories: [],
     addExpenseStatus: "success",
     addExpenseErrorMessage: null,
     deleteExpenseStatus: "success",
@@ -38,6 +40,31 @@ export function initialState(): CatExpenseStoreType {
     fetchExpenseStatus: "success",
     fetchExpenseErrorMessage: null,
   };
+}
+
+function calculateWinningCategory(expenses: CatExpense[]): Category[] {
+  if (expenses.length === 0) return [];
+  const tally = {
+    Food: 0,
+    Accessory: 0,
+    Furniture: 0,
+  };
+  for (const exp of expenses) {
+    tally[exp.category] += exp.amount;
+  }
+  const numberToCategories: Record<number, Category[]> = {};
+  for (const [cat, amount] of Object.entries(tally)) {
+    const current = numberToCategories[amount];
+    if (!current) {
+      numberToCategories[amount] = [];
+    }
+    numberToCategories[amount].push(cat as Category);
+  }
+  return Object.entries(numberToCategories).sort(
+    ([amountA], [amountB]): number => {
+      return parseFloat(amountB) - parseFloat(amountA);
+    },
+  )[0][1];
 }
 
 const catExpenseReducer: React.Reducer<
@@ -59,6 +86,7 @@ const catExpenseReducer: React.Reducer<
         ...state,
         fetchExpenseStatus: "success",
         expenses: action.payload.expenses,
+        winningCategories: calculateWinningCategory(action.payload.expenses),
       };
     case "fetchError":
       return {
@@ -73,10 +101,12 @@ const catExpenseReducer: React.Reducer<
         addExpenseErrorMessage: null,
       };
     case "addSuccess":
+      const postAdd = [...state.expenses, action.payload.expense];
       return {
         ...state,
         addExpenseStatus: "success",
-        expenses: [...state.expenses, action.payload.expense],
+        expenses: postAdd,
+        winningCategories: calculateWinningCategory(postAdd),
       };
     case "addError":
       return {
@@ -134,6 +164,7 @@ const catExpenseReducer: React.Reducer<
         deleteExpenseStatus: "success",
         expensesMarkedForDeletion: new Set(),
         expenses: newExpenses,
+        winningCategories: calculateWinningCategory(newExpenses),
       };
     case "deleteError":
       return {

@@ -1,21 +1,20 @@
-import { CatExpense } from '@/app/types/CatExpense';
 import React, { ChangeEventHandler } from 'react';
+
+import { CatExpense } from '@/app/types/CatExpense';
 import { useCatExpenseContext } from '../context';
+import styles from '../styles.module.css';
 
 type ExpenseProps = {
   expense: CatExpense;
   toggleCheckbox: ChangeEventHandler;
+  isCategoryWinner: boolean;
 }
-function Expense({ expense: ex, toggleCheckbox }: ExpenseProps): JSX.Element {
+function Expense({ expense: ex, toggleCheckbox, isCategoryWinner }: ExpenseProps): JSX.Element {
   const { catExpenseStore: { expensesMarkedForDeletion } } = useCatExpenseContext();
   const isChecked = React.useMemo(() => expensesMarkedForDeletion.has(ex.id), [ex, expensesMarkedForDeletion])
 
-  React.useEffect(() => {
-    console.log('this expense is checked: ', isChecked);
-  }, [isChecked]);
-
   return (
-    <tr>
+    <tr className={isCategoryWinner ? styles.categoryWinner : ''}>
       <td>
         <input type="checkbox"
           key={Math.random()}

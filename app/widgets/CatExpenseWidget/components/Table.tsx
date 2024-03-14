@@ -34,7 +34,7 @@ const Table: React.FunctionComponent<TableProps> = function Table() {
       </thead>
       <tbody className={styles.tableBody}>
         {store.expenses.map((ex: CatExpense) => (
-          <Expense expense={ex} key={ex.id} toggleCheckbox={toggleCheckbox(ex.id)} />
+          <Expense expense={ex} key={ex.id} toggleCheckbox={toggleCheckbox(ex.id)} isCategoryWinner={store.winningCategories.includes(ex.category)} />
         ))}
       </tbody>
     </table>
