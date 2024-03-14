@@ -5,7 +5,7 @@ import { CatExpenseCreateParameters } from '@/app/types/CatExpense';
 import styles from '../styles.module.css';
 
 type AddCatExpenseFormProps = {
-  submitCatExpenseForm: (p: CatExpenseCreateParameters) => Promise<void>
+  submitCatExpenseForm: (p: CatExpenseCreateParameters) => Promise<unknown>;
 };
 
 function AddCatExpenseForm(props: AddCatExpenseFormProps): JSX.Element {
@@ -39,29 +39,36 @@ function AddCatExpenseForm(props: AddCatExpenseFormProps): JSX.Element {
         {({ errors, touched }) => (
           <Form className={styles.addCatExpenseForm}>
             <label htmlFor="itemName">Item:</label>
-            <Field id="itemName" name="itemName" placeholder="Whiskers Cat Food" />
-            {errors.itemName && touched.itemName ? (
-              <p className={styles.formValidationError}>{errors.itemName}</p>
-            ) : null}
+            <div className={styles.inputWrapper}>
+              <Field id="itemName" name="itemName" placeholder="Whiskers Cat Food" />
+              {errors.itemName && touched.itemName ? (
+                <p className={styles.formValidationError}>{errors.itemName}</p>
+              ) : null}
+            </div>
 
             <label htmlFor="category">Category</label>
-            <Field as="select" id="category" name="category">
-              <option value="Food">Food</option>
-              <option value="Furniture">Furniture</option>
-              <option value="Accessory">Accessory</option>
-            </Field>
+            <div className={styles.selectWrapper}>
+              <Field as="select" id="category" name="category">
+                <option value="Food">Food</option>
+                <option value="Furniture">Furniture</option>
+                <option value="Accessory">Accessory</option>
+              </Field>
+            </div>
 
             <label htmlFor="amount">Amount</label>
-            <Field
-              id="amount"
-              name="amount"
-              type="number"
-            />
-            {errors.amount && touched.amount ? (
-              <p className={styles.formValidationError}>{errors.amount}</p>
-            ) : null}
-
-            <button type="submit">Submit</button>
+            <div className={styles.inputWrapper}>
+              <Field
+                id="amount"
+                name="amount"
+                type="number"
+              />
+              {errors.amount && touched.amount ? (
+                <p className={styles.formValidationError}>{errors.amount}</p>
+              ) : null}
+            </div>
+            <div className={styles.buttonWrapper}>
+              <button type="submit">Submit</button>
+            </div>
           </Form>
 
         )}

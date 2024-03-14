@@ -1,5 +1,8 @@
+'use client';
+
 import styles from "./page.module.css";
 import CatExpenseTable from "./widgets/CatExpenseWidget";
+import CatExpenseContextProvider from "./widgets/CatExpenseWidget/context";
 
 export default function Home() {
   return (
@@ -20,7 +23,9 @@ export default function Home() {
       </div>
 
       <div className={styles.center}>
-        <CatExpenseTable />
+        <CatExpenseContextProvider>
+          <CatExpenseTable />
+        </CatExpenseContextProvider>
       </div>
     </main>
   );

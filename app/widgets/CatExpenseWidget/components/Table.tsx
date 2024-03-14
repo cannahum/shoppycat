@@ -1,17 +1,25 @@
-import React from 'react';
+import React, { ChangeEventHandler } from 'react';
 
 import { CatExpense } from '@/app/types/CatExpense';
 import styles from '../styles.module.css';
 import { useCatExpenseContext } from '../context';
+import Expense from './Expense';
 
 type TableProps = {};
 
-const Table: React.FunctionComponent<TableProps> = function Table(props) {
-  const { catExpenseStore: store } = useCatExpenseContext();
+const Table: React.FunctionComponent<TableProps> = function Table() {
+  const { catExpenseStore: store, markCatExpenseForDeletion, unmarkCatExpenseForDeletion } = useCatExpenseContext();
 
-  function toggleCheckbox(e: React.ChangeEvent<HTMLInputElement>) {
-    e.preventDefault();
-    // implement me
+  function toggleCheckbox(id: string): ChangeEventHandler {
+    return (e: React.ChangeEvent<HTMLInputElement>) => {
+      e.preventDefault();
+      e.nativeEvent.preventDefault();
+      if (e.currentTarget.checked) {
+        markCatExpenseForDeletion(id)
+      } else {
+        unmarkCatExpenseForDeletion(id)
+      }
+    }
   }
 
   return (
@@ -26,13 +34,7 @@ const Table: React.FunctionComponent<TableProps> = function Table(props) {
       </thead>
       <tbody className={styles.tableBody}>
         {store.expenses.map((ex: CatExpense) => (
-          <tr key={ex.id}>
-            <td><input type="checkbox" onChange={toggleCheckbox} /></td>
-            <td>{ex.itemName}</td>
-            <td>{ex.category}</td>
-            <td>{ex.amount}</td>
-          </tr>
-
+          <Expense expense={ex} key={ex.id} toggleCheckbox={toggleCheckbox(ex.id)} />
         ))}
       </tbody>
     </table>

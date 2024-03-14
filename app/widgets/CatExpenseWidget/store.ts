@@ -1,6 +1,6 @@
 import React from "react";
 
-import CatExpense from "@/app/types/CatExpense";
+import { CatExpense } from "@/app/types/CatExpense";
 import OperationStatus from "@/app/types/operationStatus";
 
 export type CatExpenseStoreType = {
@@ -109,6 +109,7 @@ const catExpenseReducer: React.Reducer<
         return state;
       }
       const s = new Set(Array.from(state.expensesMarkedForDeletion));
+      s.delete(id);
       return {
         ...state,
         expensesMarkedForDeletion: s,

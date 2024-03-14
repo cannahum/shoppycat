@@ -93,9 +93,9 @@
 	grid-column: labels;
 }
 
-.addCatExpenseForm input,
-.addCatExpenseForm select,
-.addCatExpenseForm button {
+.addCatExpenseForm .inputWrapper,
+.addCatExpenseForm .selectWrapper,
+.addCatExpenseForm .buttonWrapper {
 	grid-column: controls;
 }
 
