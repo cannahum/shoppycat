@@ -9,6 +9,9 @@ type ExpenseProps = {
   toggleCheckbox: ChangeEventHandler;
   isCategoryWinner: boolean;
 }
+
+const currencyFormatter = Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
+
 function Expense({ expense: ex, toggleCheckbox, isCategoryWinner }: ExpenseProps): JSX.Element {
   const { catExpenseStore: { expensesMarkedForDeletion } } = useCatExpenseContext();
   const isChecked = React.useMemo(() => expensesMarkedForDeletion.has(ex.id), [ex, expensesMarkedForDeletion])
@@ -23,7 +26,7 @@ function Expense({ expense: ex, toggleCheckbox, isCategoryWinner }: ExpenseProps
       </td>
       <td>{ex.itemName}</td>
       <td>{ex.category}</td>
-      <td>{ex.amount}</td>
+      <td>{currencyFormatter.format(ex.amount)}</td>
     </tr>
   )
 }
