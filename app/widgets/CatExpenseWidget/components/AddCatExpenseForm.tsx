@@ -3,6 +3,7 @@ import { Formik, Field, Form, FormikHelpers, FormikErrors } from 'formik';
 
 import { CatExpenseCreateParameters } from '@/app/types/CatExpense';
 import styles from '../styles.module.css';
+import RandomFact from './RandomFact';
 
 type AddCatExpenseFormProps = {
   submitCatExpenseForm: (p: CatExpenseCreateParameters) => Promise<unknown>;
@@ -73,10 +74,7 @@ function AddCatExpenseForm(props: AddCatExpenseFormProps): JSX.Element {
 
         )}
       </Formik>
-      <div className={styles.randomFactWrapper}>
-        <span className={styles.randomFactTitle}>Random cat fact:</span>
-        <span className={styles.randomFact}>Info here...</span>
-      </div>
+      <RandomFact />
     </div>
   )
 

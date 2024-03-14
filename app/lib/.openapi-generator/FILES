@@ -1,0 +1,9 @@
+.openapi-generator-ignore
+apis/BreedsApi.ts
+apis/FactsApi.ts
+apis/index.ts
+index.ts
+models/Breed.ts
+models/CatFact.ts
+models/index.ts
+runtime.ts
