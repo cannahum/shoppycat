@@ -37,7 +37,7 @@ export function useCatExpenseContext() {
 const CatExpenseContextProvider: React.FunctionComponent<CatExpenseContextProviderProps> = function CatExpenseContextProvider({ children }): JSX.Element {
   const [catExpenseStore, dispatch] = React.useReducer<React.Reducer<CatExpenseStoreType, CatExpenseActionCreatorType>>(reducer, initialState())
 
-  function fetchCatExpenses() {
+  function fetchCatExpenses(): Promise<void> {
     dispatch({
       type: 'fetchRequested'
     });
@@ -68,6 +68,7 @@ const CatExpenseContextProvider: React.FunctionComponent<CatExpenseContextProvid
             ]
           }
         });
+        r();
       }, API_DURATION)
     })
   }
