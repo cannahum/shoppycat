@@ -1,7 +1,7 @@
 import React from 'react';
 
 import styles from '../styles.module.css';
-import { Configuration, FactsApi } from '@/app/lib';
+import { Configuration, FactsApi } from '@/app/lib/catfact';
 import Loader from '@/app/components/Loader';
 
 function RandomFact() {
