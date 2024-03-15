@@ -8,7 +8,7 @@ export default function Home() {
     <main className={styles.main}>
       <div className={styles.description}>
         <p>
-          Created by Can (a.k.a. Jon) for <code>EarnIn</code>
+          Created by Can (a.k.a. Jon) for <code>Interview</code>
         </p>
         <div>
           <a
